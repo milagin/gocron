@@ -103,10 +103,10 @@ func (setting *Setting) formatSlack(list []Setting, slack *Slack) {
 
 func (setting *Setting) UpdateSlack(url, template string) error {
 	setting.Value = url
-	Db.Model(&Setting{}).Where("code = ? AND `key` = ?", SlackCode, SlackUrlKey).Update("value", url)
+	Db.Model(&Setting{}).Where(map[string]interface{}{"code": SlackCode, "key": SlackUrlKey}).Update("value", url)
 
 	setting.Value = template
-	Db.Model(&Setting{}).Where("code = ? AND `key` = ?", SlackCode, SlackTemplateKey).Update("value", template)
+	Db.Model(&Setting{}).Where(map[string]interface{}{"code": SlackCode, "key": SlackTemplateKey}).Update("value", template)
 
 	return nil
 }
@@ -123,13 +123,13 @@ func (setting *Setting) CreateChannel(channel string) (int64, error) {
 
 func (setting *Setting) IsChannelExist(channel string) bool {
 	var count int64
-	Db.Model(&Setting{}).Where("code = ? AND `key` = ? AND value = ?", SlackCode, SlackChannelKey, channel).Count(&count)
+	Db.Model(&Setting{}).Where(map[string]interface{}{"code": SlackCode, "key": SlackChannelKey, "value": channel}).Count(&count)
 	return count > 0
 }
 
 // 删除slack渠道
 func (setting *Setting) RemoveChannel(id int) (int64, error) {
-	result := Db.Where("code = ? AND `key` = ? AND id = ?", SlackCode, SlackChannelKey, id).Delete(&Setting{})
+	result := Db.Where(map[string]interface{}{"code": SlackCode, "key": SlackChannelKey, "id": id}).Delete(&Setting{})
 	return result.RowsAffected, result.Error
 }
 
@@ -186,8 +186,8 @@ func (setting *Setting) formatMail(list []Setting, mail *Mail) {
 }
 
 func (setting *Setting) UpdateMail(config, template string) error {
-	Db.Model(&Setting{}).Where("code = ? AND `key` = ?", MailCode, MailServerKey).Update("value", config)
-	Db.Model(&Setting{}).Where("code = ? AND `key` = ?", MailCode, MailTemplateKey).Update("value", template)
+	Db.Model(&Setting{}).Where(map[string]interface{}{"code": MailCode, "key": MailServerKey}).Update("value", config)
+	Db.Model(&Setting{}).Where(map[string]interface{}{"code": MailCode, "key": MailTemplateKey}).Update("value", template)
 
 	return nil
 }
@@ -207,7 +207,7 @@ func (setting *Setting) CreateMailUser(username, email string) (int64, error) {
 }
 
 func (setting *Setting) RemoveMailUser(id int) (int64, error) {
-	result := Db.Where("code = ? AND `key` = ? AND id = ?", MailCode, MailUserKey, id).Delete(&Setting{})
+	result := Db.Where(map[string]interface{}{"code": MailCode, "key": MailUserKey, "id": id}).Delete(&Setting{})
 	return result.RowsAffected, result.Error
 }
 
@@ -252,7 +252,7 @@ func (setting *Setting) formatWebhook(list []Setting, webHook *WebHook) {
 }
 
 func (setting *Setting) UpdateWebHook(template string) error {
-	Db.Model(&Setting{}).Where("code = ? AND `key` = ?", WebhookCode, WebhookTemplateKey).Update("value", template)
+	Db.Model(&Setting{}).Where(map[string]interface{}{"code": WebhookCode, "key": WebhookTemplateKey}).Update("value", template)
 	return nil
 }
 
@@ -274,7 +274,7 @@ func (setting *Setting) CreateWebhookUrl(name, url string) (int64, error) {
 }
 
 func (setting *Setting) RemoveWebhookUrl(id int) (int64, error) {
-	result := Db.Where("code = ? AND `key` = ? AND id = ?", WebhookCode, WebhookUrlKey, id).Delete(&Setting{})
+	result := Db.Where(map[string]interface{}{"code": WebhookCode, "key": WebhookUrlKey, "id": id}).Delete(&Setting{})
 	return result.RowsAffected, result.Error
 }
 
@@ -285,7 +285,7 @@ func (setting *Setting) RemoveWebhookUrl(id int) (int64, error) {
 // getSettingValue 获取配置值的通用方法
 func (setting *Setting) getSettingValue(code, key string) (string, error) {
 	var s Setting
-	err := Db.Where("code = ? AND `key` = ?", code, key).First(&s).Error
+	err := Db.Where(map[string]interface{}{"code": code, "key": key}).First(&s).Error
 	if err != nil {
 		return "", err
 	}
@@ -295,7 +295,7 @@ func (setting *Setting) getSettingValue(code, key string) (string, error) {
 // updateOrCreateSetting 更新或创建配置的通用方法
 func (setting *Setting) updateOrCreateSetting(code, key, value string) error {
 	var s Setting
-	err := Db.Where("code = ? AND `key` = ?", code, key).First(&s).Error
+	err := Db.Where(map[string]interface{}{"code": code, "key": key}).First(&s).Error
 	if err != nil {
 		// 记录不存在，创建新记录
 		s.Code = code
@@ -305,7 +305,7 @@ func (setting *Setting) updateOrCreateSetting(code, key, value string) error {
 		return result.Error
 	}
 	// 记录存在，更新
-	result := Db.Model(&Setting{}).Where("code = ? AND `key` = ?", code, key).Update("value", value)
+	result := Db.Model(&Setting{}).Where(map[string]interface{}{"code": code, "key": key}).Update("value", value)
 	return result.Error
 }
 

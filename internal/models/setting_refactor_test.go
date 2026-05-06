@@ -199,7 +199,7 @@ func TestSettingHelperMethods(t *testing.T) {
 		}
 
 		var s Setting
-		db.Where("code = ? AND `key` = ?", "test", "key2").First(&s)
+		db.Where(map[string]interface{}{"code": "test", "key": "key2"}).First(&s)
 		if s.Value != "value2" {
 			t.Errorf("expected 'value2', got '%s'", s.Value)
 		}
@@ -210,14 +210,14 @@ func TestSettingHelperMethods(t *testing.T) {
 			t.Errorf("failed to update: %v", err)
 		}
 
-		db.Where("code = ? AND `key` = ?", "test", "key2").First(&s)
+		db.Where(map[string]interface{}{"code": "test", "key": "key2"}).First(&s)
 		if s.Value != "value2_updated" {
 			t.Errorf("expected 'value2_updated', got '%s'", s.Value)
 		}
 
 		// 验证只有一条记录
 		var count int64
-		db.Model(&Setting{}).Where("code = ? AND `key` = ?", "test", "key2").Count(&count)
+		db.Model(&Setting{}).Where(map[string]interface{}{"code": "test", "key": "key2"}).Count(&count)
 		if count != 1 {
 			t.Errorf("expected 1 record, got %d", count)
 		}

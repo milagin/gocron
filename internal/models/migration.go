@@ -213,7 +213,7 @@ func (m *Migration) upgradeFor150(tx *gorm.DB) error {
 
 	// 检查并创建邮件模板配置
 	var count int64
-	tx.Model(&Setting{}).Where("code = ? AND `key` = ?", MailCode, MailTemplateKey).Count(&count)
+	tx.Model(&Setting{}).Where(map[string]interface{}{"code": MailCode, "key": MailTemplateKey}).Count(&count)
 	if count == 0 {
 		settingModel := &Setting{
 			Code:  MailCode,
@@ -226,7 +226,7 @@ func (m *Migration) upgradeFor150(tx *gorm.DB) error {
 	}
 
 	// 检查并创建Slack模板配置
-	tx.Model(&Setting{}).Where("code = ? AND `key` = ?", SlackCode, SlackTemplateKey).Count(&count)
+	tx.Model(&Setting{}).Where(map[string]interface{}{"code": SlackCode, "key": SlackTemplateKey}).Count(&count)
 	if count == 0 {
 		settingModel := &Setting{
 			Code:  SlackCode,
@@ -239,7 +239,7 @@ func (m *Migration) upgradeFor150(tx *gorm.DB) error {
 	}
 
 	// 检查并创建Webhook URL配置
-	tx.Model(&Setting{}).Where("code = ? AND `key` = ?", WebhookCode, WebhookUrlKey).Count(&count)
+	tx.Model(&Setting{}).Where(map[string]interface{}{"code": WebhookCode, "key": WebhookUrlKey}).Count(&count)
 	if count == 0 {
 		settingModel := &Setting{
 			Code:  WebhookCode,
@@ -252,7 +252,7 @@ func (m *Migration) upgradeFor150(tx *gorm.DB) error {
 	}
 
 	// 检查并创建Webhook模板配置
-	tx.Model(&Setting{}).Where("code = ? AND `key` = ?", WebhookCode, WebhookTemplateKey).Count(&count)
+	tx.Model(&Setting{}).Where(map[string]interface{}{"code": WebhookCode, "key": WebhookTemplateKey}).Count(&count)
 	if count == 0 {
 		settingModel := &Setting{
 			Code:  WebhookCode,

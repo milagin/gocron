@@ -75,7 +75,7 @@ func TestSetting_CreateWebhookUrl(t *testing.T) {
 
 	// 验证数据已保存
 	var saved Setting
-	if err := db.Where("code = ? AND `key` = ?", WebhookCode, WebhookUrlKey).First(&saved).Error; err != nil {
+	if err := db.Where(map[string]interface{}{"code": WebhookCode, "key": WebhookUrlKey}).First(&saved).Error; err != nil {
 		t.Fatalf("failed to find saved webhook url: %v", err)
 	}
 
@@ -107,7 +107,7 @@ func TestSetting_RemoveWebhookUrl(t *testing.T) {
 
 	// 获取创建的ID
 	var saved Setting
-	if err := db.Where("code = ? AND `key` = ?", WebhookCode, WebhookUrlKey).First(&saved).Error; err != nil {
+	if err := db.Where(map[string]interface{}{"code": WebhookCode, "key": WebhookUrlKey}).First(&saved).Error; err != nil {
 		t.Fatalf("failed to find saved webhook url: %v", err)
 	}
 
@@ -202,7 +202,7 @@ func TestSetting_UpdateWebHook(t *testing.T) {
 
 	// 验证更新
 	var saved Setting
-	if err := db.Where("code = ? AND `key` = ?", WebhookCode, WebhookTemplateKey).First(&saved).Error; err != nil {
+	if err := db.Where(map[string]interface{}{"code": WebhookCode, "key": WebhookTemplateKey}).First(&saved).Error; err != nil {
 		t.Fatalf("failed to find updated template: %v", err)
 	}
 
@@ -256,7 +256,7 @@ func TestSetting_CreateWebhookUrl_DuplicateNames(t *testing.T) {
 
 	// 验证两个都存在
 	var count int64
-	db.Model(&Setting{}).Where("code = ? AND `key` = ?", WebhookCode, WebhookUrlKey).Count(&count)
+	db.Model(&Setting{}).Where(map[string]interface{}{"code": WebhookCode, "key": WebhookUrlKey}).Count(&count)
 	if count != 2 {
 		t.Errorf("expected 2 webhook urls, got %d", count)
 	}
